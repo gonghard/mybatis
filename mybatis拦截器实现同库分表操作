@@ -141,12 +141,12 @@
             		System.out.println(id);
             		String className = id.substring(0, id.lastIndexOf("."));
             		Class<?> classObj = Class.forName(className);
-            		// 根据配置自动生成分表SQL
             		TableTag tableSeg = classObj.getAnnotation(TableTag.class);
-            		if (tableSeg == null) {
+            		if (tableSeg == null) {//若不需要分表操作直接交至下一拦截器操作
             			return invocation.proceed();
             		}
             		AnalyzeSqlTableIndex analyzeSqlTableIndex = new AnalyzeSqlTableIndex(boundSql, tableSeg, originalSql);
+            		//替换delegate.boundSql.sql
             		metaStatementHandler.setValue("delegate.boundSql.sql", analyzeSqlTableIndex.getNewSqlByTableIndex());
             		return invocation.proceed();
             	}
